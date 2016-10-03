@@ -12,6 +12,12 @@ function camera:initialize(mapWidth, mapHeight, rotation, scale)
   self._layers = {}
   self._transformationX = nil
   self._transformationY = nil
+  self._lifeSprite = love.graphics.newImage('assets/smolocto.png')
+end
+
+function camera:drawHud(height)
+  love.graphics.setColor(44, 49, 6)
+  love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), height)
 end
 
 function camera:centerOn(x, y)
@@ -77,10 +83,16 @@ function camera:draw()
     self:unset()
   end
   self._transformationX, self._transformationY = bx, by
+  self:drawHud(8 * self._scale)
   -- draw lives remaining
-  love.graphics.setColor(206, 210, 161)
-  love.graphics.print('Lives: '..myPlayer:getLives(), love.graphics.getWidth()-(50*self._scale), 10, 0, self._scale, self._scale)
+  --love.graphics.setColor(206, 210, 161)
+  --love.graphics.print('Lives: '..myPlayer:getLives(), love.graphics.getWidth()-(50*self._scale), 10, 0, self._scale, self._scale)
   love.graphics.setColor(256, 256, 256)
+  local location = love.graphics.getWidth() - ((self._lifeSprite:getWidth() + 2) * self._scale) - 2
+  for i=1, myPlayer:getLives() do
+    love.graphics.draw(self._lifeSprite, location, 0, 0, self._scale, self._scale)
+    location = location - ((self._lifeSprite:getWidth() + 2) * self._scale)
+  end
 end
 
 function camera:getScale()

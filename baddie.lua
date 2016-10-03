@@ -4,7 +4,7 @@ require 'TEsound'
 
 baddie = class('baddie')
 
-function baddie:initialize(x, y, speed, collider, g, id)
+function baddie:initialize(x, y, speed, collider, g, id, builder)
   self._sprite = love.graphics.newImage('assets/Baddie.png')
   self._spriteWidth = 8
   self._spriteHeight = 8

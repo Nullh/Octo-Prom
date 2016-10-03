@@ -10,7 +10,7 @@ function baddiebuilder:initialize(mapObjects, collider, gravity)
   for i, bad in ipairs(mapObjects) do
     --local x, y = bad:center()
     local id = 'b'..i
-    local obj = baddie:new(bad['x'], bad['y'], 30, collider, gravity, id)
+    local obj = baddie:new(bad['x'], bad['y'], 30, collider, gravity, id, self)
     --self._baddiesTable[obj] = obj
     table.insert(self._baddiesTable, obj)
     --table.insert(self._baddiesTable, baddie:new(100, 50*i , 30, collider, gravity))

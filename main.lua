@@ -36,7 +36,7 @@ function love.load()
   collider = HC.new(300)
   blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
   allBaddies = baddiebuilder:new(map:getObjectsFromLayer('enemies'), collider, gravity)
-  myPlayer = player:new(10, 30, 50, 60, 3, 0.5, collider, gravity)
+  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, collider, gravity)
   bad1 = baddie:new(60, 60, 10, collider, gravity)
   myWorld = world:new(map, collider, 500)
 
