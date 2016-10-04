@@ -10,8 +10,8 @@ function camera:initialize(mapWidth, mapHeight, rotation, scale)
   self._rotation = rotation
   self._scale = scale
   self._layers = {}
-  self._transformationX = nil
-  self._transformationY = nil
+  self._transformationX = 0
+  self._transformationY = 0
   self._lifeSprite = love.graphics.newImage('assets/smolocto.png')
 end
 
