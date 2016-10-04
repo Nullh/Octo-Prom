@@ -273,6 +273,7 @@ function player:newSquirt()
 end
 
 function player:removeSquirt()
-  table.remove(self._squirts, 1)
+  --table.remove(self._squirts, 1)
+  self._squirts = {}
   --self._canSquirt = true
 end
