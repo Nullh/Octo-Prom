@@ -1,12 +1,14 @@
 local class = require 'middleclass'
 local anim8 = require 'anim8'
 require 'TEsound'
+require 'squirt'
 
 player = class('player')
 
 function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, collider, g)
   self._animations = {}
   self._sprite = love.graphics.newImage('assets/Octo 16.png')
+  self._ink = love.graphics.newImage('assets/ink.png')
   self._spriteWidth = 16
   self._spriteHeight = 16
   self._x = x
@@ -29,6 +31,7 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, collid
   self._invulnTimerMax = 3
   self._invulnTimer = 0
   self._g = g
+  self._canSquirt = true
   self._collObj = collider:rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
   self._collObj.type = 'player'
   self._grid = anim8.newGrid(self._spriteWidth, self._spriteHeight, self._sprite:getWidth(), self._sprite:getHeight())
@@ -39,6 +42,7 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, collid
   self._animations['jumpingRight'] = anim8.newAnimation(self._grid(2,2), 0.2)
   self._animations['jumpingLeft'] = anim8.newAnimation(self._grid(2,2), 0.2):flipH()
   self._jumpSound = love.sound.newSoundData('assets/bark.mp3')
+  self._squirts = {}
 end
 
 function player:getX()
@@ -111,6 +115,10 @@ function player:jump()
     TEsound.play(self._jumpSound, 'jump', 1, 1, self:flipCanBark())
   end
   self._jumping = true
+  if self._canSquirt then
+    self:newSquirt(self._x, self._y)
+    self._canSquirt = false
+  end
 end
 
 function player:update(dt, spaceReleased)
@@ -143,9 +151,10 @@ function player:update(dt, spaceReleased)
     if delta.y < 0 then
       self._yVelocity = 0
       self._jumpTimer = self._jumpTimerMax
+      self._jumping = false
       if spaceReleased then
         self._canJump = true
-        self._jumping = false
+        self._canSquirt = true
       end
     elseif delta.y > 0 then
       self._yVelocity = 0.1
@@ -177,6 +186,11 @@ function player:update(dt, spaceReleased)
   self._animations['jumpingRight']:update(dt)
   self._animations['jumpingLeft']:update(dt)
 
+  -- update squirts
+  for i, v in ipairs(self._squirts) do
+    v:update(dt)
+  end
+
   if self._invulnTimer > 0 then
     if self._isFlashFrame then
       self._isFlashFrame = false
@@ -193,7 +207,12 @@ function player:getYVelocity()
 end
 
 function player:draw()
+  -- draw squirts
+  for i, v in ipairs(self._squirts) do
+    v:draw()
+  end
   if not self._isFlashFrame then
+
     -- draw the player
     if self._jumping then
       if self._facingRight == true then
@@ -247,4 +266,13 @@ end
 
 function player:isDead()
   return self._dead
+end
+
+function player:newSquirt()
+  table.insert(self._squirts, squirt:new(self._x, self._y+(self._spriteHeight/2), self._ink, self))
+end
+
+function player:removeSquirt()
+  table.remove(self._squirts, 1)
+  --self._canSquirt = true
 end
