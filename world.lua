@@ -1,9 +1,10 @@
 local class = require 'middleclass'
 require 'TEsound'
+require 'pickup'
 
 world = class('world')
 
-function world:initialize(map, collider, gravity)
+function world:initialize(map, collider, gravity, pickups)
   self._map = map
   self._collider = collider
   self._gravity = gravity
@@ -20,9 +21,42 @@ function world:initialize(map, collider, gravity)
   --self._topBorder = collider:rectangle(-10, -10, self._width + 20, 10)
   --self._topBorder.type = 'bounds'
 
+  --self._pickups = {}
+  --for i=1, table.getn(pickups) do
+  --  table.add(self._pickups, pickup:new(pickups[i].x, pickup[i].y, self._collider, i))
+  --end
+
+  self._pickups = {}
+  for i, pckp in ipairs(pickups) do
+    --local x, y = bad:center()
+    local obj = pickup:new(pckp['x'], pckp['y'], self._collider, i)
+    --self._baddiesTable[obj] = obj
+    table.insert(self._pickups, obj)
+  end
+
   self._muted = false
 
   --TEsound.playLooping('assets/MSTRself._-self._MSTRself._-self._Choroself._bavarioself._Loop.ogg', 'bgm')
+end
+
+--reload world after a map is loaded
+function world:reload(collider, pickups)
+  self._collider = collider
+  self._pickups = {}
+-- get the list of pickups  self._pickups = {}
+  for i, pckp in ipairs(pickups) do
+    --local x, y = bad:center()
+    local obj = pickup:new(pckp['x'], pckp['y'], self._collider, i)
+    --self._baddiesTable[obj] = obj
+    table.insert(self._pickups, obj)
+  end
+  -- add walls at screen edge
+  self._leftBorder = collider:rectangle(-10, -10, 10, self._height + 20)
+  self._leftBorder.type = 'bounds'
+  self._rightBorder = collider:rectangle(self._width, -10, 10, self._height + 20)
+  self._rightBorder.type = 'bounds'
+  self._botBorder = collider:rectangle(-10, self._height, self._width + 20, 10)
+  self._botBorder.type = 'bounds'
 end
 
 function world:mute()
@@ -33,6 +67,28 @@ function world:mute()
     TEsound.resume('bgm')
     self._muted = false
   end
+end
+
+function world:drawPickups()
+  for i, v in ipairs(self._pickups) do
+    v:draw()
+  end
+end
+
+function world:removePickup(id)
+  for i, v in ipairs(self._pickups) do
+    if v:getId() == id then
+      v:collect()
+    end
+  end
+end
+
+function world:getPickupInfo()
+  local test = table.getn(self._pickups)
+  for i, obj in ipairs(self._pickups) do
+    test = test..'\n'..obj:getX()..','..obj:getY()
+  end
+  return test
 end
 
 -- what happens when two things collide
@@ -50,4 +106,12 @@ function world:collideWith(testObj, exclude)
       end
     end
   end
+end
+
+function world:getGravity()
+  return self._gravity
+end
+
+function world:getCollider()
+  return self._collider
 end

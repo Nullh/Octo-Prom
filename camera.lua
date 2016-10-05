@@ -13,6 +13,7 @@ function camera:initialize(mapWidth, mapHeight, rotation, scale)
   self._transformationX = 0
   self._transformationY = 0
   self._lifeSprite = love.graphics.newImage('assets/smolocto.png')
+  self._scoreSprite = love.graphics.newImage('assets/scoreicon.png')
 end
 
 function camera:drawHud(height)
@@ -93,6 +94,9 @@ function camera:draw()
     love.graphics.draw(self._lifeSprite, location, 0, 0, self._scale, self._scale)
     location = location - ((self._lifeSprite:getWidth() + 2) * self._scale)
   end
+  love.graphics.setColor(88, 94, 32)
+  love.graphics.draw(self._scoreSprite, 0, 0, 0, self._scale, self._scale)
+  love.graphics.print(myPlayer:getScore(), (16 * self._scale), self._scale, 0, self._scale/2, self._scale/2)
 end
 
 function camera:getScale()

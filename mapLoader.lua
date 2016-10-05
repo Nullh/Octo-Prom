@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 mapLoader = class('mapLoader')
 
-function mapLoader:initialize(path, atlaspath)
+function mapLoader:initialize(path, atlaspath, collider)
   -- load the map file
   self._file = love.filesystem.load(path)()
   -- load the atlas
@@ -10,6 +10,8 @@ function mapLoader:initialize(path, atlaspath)
   self._atlas = love.graphics.newImage(atlaspath)
   -- load the tiles for the map
   self._tiles = {}
+  self._levelEnd = {}
+  self._collider = collider
   local ids = {} -- list of all tileIds
   local tileids = {} -- list of non-duplicate tileIds
   local hash = {} -- used for de-dup
@@ -63,6 +65,7 @@ function mapLoader:draw(minLayer, maxLayer)
   if minLayer <= 0 then
     minLayer = 1
   end
+
   for n = minLayer, maxLayer do
     if self._file.layers[n].type == "tilelayer" then
         local row = 1
@@ -133,4 +136,20 @@ function mapLoader:getObjectsFromLayer(layerString)
   end
 
   return tileTable
+end
+
+function mapLoader:getLevelEnd()
+  local matchLayer
+  for i=1, table.getn(self._file.layers) do
+    if self._file.layers[i].name == 'levelend' then
+      -- find the blocking layer
+      matchLayer = i
+    end
+  end
+  local x = self._file.layers[matchLayer].objects[1].x
+  local y = self._file.layers[matchLayer].objects[1].y
+  local width = self._file.layers[matchLayer].objects[1].width
+  local height = self._file.layers[matchLayer].objects[1].height
+  self._levelEnd = self._collider:rectangle(x, y, width, height)
+  self._levelEnd.type = 'levelend'
 end

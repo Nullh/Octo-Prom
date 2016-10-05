@@ -29,20 +29,23 @@ end
 
 function playState:init()
   gravity = 10
-  map = mapLoader:new('maps/map4.lua', 'assets/Blocks 8x8.png')
   collider = HC.new(300)
+  map = mapLoader:new('maps/map4.lua', 'assets/Blocks 8x8.png', collider)
+  levelEnd = map:getLevelEnd()
+
   blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
   allBaddies = baddiebuilder:new(map:getObjectsFromLayer('enemies'), collider, gravity)
-  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, collider, gravity)
-  bad1 = baddie:new(60, 60, 10, collider, gravity)
-  myWorld = world:new(map, collider, 500)
+  allPickups = map:getObjectsFromLayer('pickups')
+  --bad1 = baddie:new(60, 60, 10, collider, gravity)
+  myWorld = world:new(map, collider, gravity, allPickups)
+  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, myWorld)
 
   myCamera = camera:new(map:getWidth(), map:getHeight(), 0, 4)
-  myCamera:newLayer(-3, 0, function()
+  myCamera:newLayer(-9, 0, function()
     love.graphics.setColor(256, 256, 256)
     map:draw(1, 1)
   end)
-  myCamera:newLayer(-2, 1.1, function()
+  myCamera:newLayer(-8, 1.1, function()
     love.graphics.setColor(256, 256, 256)
     map:draw(2, 2)
   end)
@@ -50,6 +53,7 @@ function playState:init()
     love.graphics.setColor(255, 255, 255)
     myPlayer:draw()
     allBaddies:draw()
+    myWorld:drawPickups()
   end)
   myCamera:newLayer(0, 1.0, function()
     love.graphics.setColor(255, 255, 255)
@@ -61,6 +65,18 @@ function playState:init()
       end
     end
   end)
+end
+
+function playState:loadLevel(name)
+  collider = HC.resetHash(300)
+  map = mapLoader:new('maps/'..name..'.lua', 'assets/Blocks 8x8.png', collider)
+
+  myPlayer:recreateCollObj()
+  myPlayer:setCoords(10, 140)
+  blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
+  allBaddies = baddiebuilder:new(map:getObjectsFromLayer('enemies'), collider, gravity)
+  allPickups = map:getObjectsFromLayer('pickups')
+  myWorld:reload(collider, allPickups)
 end
 
 function playState:update(dt)
@@ -98,7 +114,12 @@ function playState:draw()
       love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     end
     if debug == true then
-      love.graphics.print(allBaddies:getBadInfo(), 10, 20)
+      --love.graphics.print(allBaddies:getBadInfo(), 10, 20)
+      love.graphics.print(table.getn(allPickups), 10, 10)
+      love.graphics.print(myWorld:getPickupInfo(), 10, 20)
       --love.graphics.print(myPlayer._invulnTimer, 10, 20)
+      for i, v in ipairs(collider) do
+        v:draw('fill')
+      end
     end
 end

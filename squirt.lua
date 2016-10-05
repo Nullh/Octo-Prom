@@ -11,8 +11,8 @@ function squirt:initialize(x, y, image, player)
   self._y = y
   _player = player
   self._image = image
-  self._grid = anim8.newGrid(8, 8, self._image:getWidth(), self._image:getHeight())
-  _animation = anim8.newAnimation(self._grid('1-4',1, '1-2',2), 0.1, destroy)
+  self._grid = anim8.newGrid(8, 16, self._image:getWidth(), self._image:getHeight())
+  _animation = anim8.newAnimation(self._grid('1-4',1, '1-4',2, '1-2',3), 0.1, destroy)
 end
 
 function squirt:draw()

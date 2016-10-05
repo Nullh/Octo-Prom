@@ -2,13 +2,15 @@ local class = require 'middleclass'
 local anim8 = require 'anim8'
 require 'TEsound'
 require 'squirt'
+require 'bubble'
 
 player = class('player')
 
-function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, collider, g)
+function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world)
   self._animations = {}
   self._sprite = love.graphics.newImage('assets/Octo 16.png')
   self._ink = love.graphics.newImage('assets/ink.png')
+  self._bubbleImg = love.graphics.newImage('assets/Bubble.png')
   self._spriteWidth = 16
   self._spriteHeight = 16
   self._x = x
@@ -27,12 +29,16 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, collid
   self._canBark = true
   self._lives = 3
   self._dead = false
+  self._score = 0
   self._isFlashFrame = false
   self._invulnTimerMax = 3
   self._invulnTimer = 0
-  self._g = g
+  self._g = world:getGravity()
   self._canSquirt = true
-  self._collObj = collider:rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
+  self._bubbleTimer = 1
+  self._bubbles = {}
+  self._world = world
+  self._collObj = world:getCollider():rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
   self._collObj.type = 'player'
   self._grid = anim8.newGrid(self._spriteWidth, self._spriteHeight, self._sprite:getWidth(), self._sprite:getHeight())
   self._animations['walkLeft'] = anim8.newAnimation(self._grid('1-3',1, 1,2), 0.2):flipH()
@@ -60,6 +66,11 @@ end
 
 function player:setY(y)
   self._y = y
+  self._collObj:moveTo(self._x, self._y)
+end
+
+function player:recreateCollObj()
+  self._collObj = self._world:getCollider():rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
   self._collObj:moveTo(self._x, self._y)
 end
 
@@ -115,10 +126,6 @@ function player:jump()
     TEsound.play(self._jumpSound, 'jump', 1, 1, self:flipCanBark())
   end
   self._jumping = true
-  if self._canSquirt then
-    self:newSquirt(self._x, self._y)
-    self._canSquirt = false
-  end
 end
 
 function player:update(dt, spaceReleased)
@@ -138,6 +145,12 @@ function player:update(dt, spaceReleased)
       self._collObj:moveTo(self._x, self._y)
     end
   end
+  -- draw a bubble
+  self._bubbleTimer = self._bubbleTimer - (1*dt)
+  if self._bubbleTimer <= 0 then
+    table.insert(self._bubbles, bubble:new(self._x, self._y-4, self._bubbleImg))
+    self._bubbleTimer = love.math.random(1, 3)
+  end
   -- have gravity affect the player
   self._yVelocity = self._yVelocity + (self._g * dt)
   self._y = self._y + self._yVelocity
@@ -146,37 +159,49 @@ function player:update(dt, spaceReleased)
   end
   self._collObj:moveTo(self._x, self._y)
   for shape, delta in pairs(collider:collisions(self._collObj)) do
-    self._x = self._x + delta.x
-    self._y = self._y + delta.y
-    if delta.y < 0 then
-      self._yVelocity = 0
-      self._jumpTimer = self._jumpTimerMax
-      self._jumping = false
-      if spaceReleased then
-        self._canJump = true
-        self._canSquirt = true
+    if shape.type == 'pickup' then
+      self._score = 1 + self._score
+      self._world:removePickup(shape.id)
+    elseif shape.type == 'levelend' then
+      playState:loadLevel('level2')
+    else
+      self._x = self._x + delta.x
+      self._y = self._y + delta.y
+      if delta.y < 0 then
+        self._yVelocity = 0
+        self._jumpTimer = self._jumpTimerMax
+        self._jumping = false
+        if spaceReleased then
+          self._canJump = true
+          --self._canSquirt = true
+        end
+      elseif delta.y > 0 then
+        self._yVelocity = 0.1
+        self._canJump = false
+
       end
-    elseif delta.y > 0 then
-      self._yVelocity = 0.1
-      self._canJump = false
-    end
-    local ux, uy, lx, ly = shape:bbox()
-    if shape.type == 'enemy'
-     and self._invulnTimer <= 0
-     and self._y + (self._spriteHeight/2) > uy then
-      self:getHit()
-      self._invulnTimer = self._invulnTimerMax
-    elseif shape.type == 'enemy'
-     and self._y + (self._spriteHeight/2) <= uy then
-       allBaddies:kill(shape.id)
-       self._yVelocity = -2.5
-       self._canJump = false
+      local ux, uy, lx, ly = shape:bbox()
+      if shape.type == 'enemy'
+       and self._invulnTimer <= 0
+       and self._y + (self._spriteHeight/2) > uy then
+        self:getHit()
+        self._invulnTimer = self._invulnTimerMax
+      elseif shape.type == 'enemy'
+       and self._y + (self._spriteHeight/2) <= uy then
+         allBaddies:kill(shape.id)
+         self._score = self._score + 1
+         self._yVelocity = -2.5
+         self._canJump = false
+      end
     end
   end
   self._collObj:moveTo(self._x, self._y)
   -- decrement the invulnerability timer
   if self._invulnTimer > 0 then
     self._invulnTimer = self._invulnTimer - dt
+  end
+  if self._invulnTimer <= 0 then
+    self._canSquirt = true
   end
   -- update the animations
   self._animations['walkLeft']:update(dt)
@@ -189,6 +214,19 @@ function player:update(dt, spaceReleased)
   -- update squirts
   for i, v in ipairs(self._squirts) do
     v:update(dt)
+  end
+
+  -- update bubbles
+  for i, v in ipairs(self._bubbles) do
+    v:update(dt)
+    if v:getY() < 0 then
+      table.remove(self._bubbles,1)
+    end
+  end
+
+  if self._score >= 20 then
+    self._score = self._score - 20
+    self._lives = self._lives + 1
   end
 
   if self._invulnTimer > 0 then
@@ -211,6 +249,12 @@ function player:draw()
   for i, v in ipairs(self._squirts) do
     v:draw()
   end
+
+  -- draw bubbles
+  for i, v in ipairs(self._bubbles) do
+    v:draw()
+  end
+
   if not self._isFlashFrame then
 
     -- draw the player
@@ -241,6 +285,9 @@ function player:draw()
     love.graphics.setColor(100, 100, 100, 150)
     self._collObj:draw('fill')
     love.graphics.setColor(256, 256, 256)
+    --for i, v in ipairs(self._bubbles) do
+    --  love.graphics.print(v:getY(), 10, (100+(10*i)))
+    --end
   end
   -- reset the moving flag
   self._moving = false
@@ -252,6 +299,10 @@ end
 
 function player:getHit()
   self._lives = self._lives - 1
+  if self._canSquirt then
+    self:newSquirt(self._x, self._y)
+    self._canSquirt = false
+  end
   if self._facingRight then
   --  self._x = self._x - 5
   --  self._y = self._y - 5
@@ -269,11 +320,16 @@ function player:isDead()
 end
 
 function player:newSquirt()
-  table.insert(self._squirts, squirt:new(self._x, self._y+(self._spriteHeight/2), self._ink, self))
+  table.insert(self._squirts, squirt:new(self._x, self._y, self._ink, self))
+end
+
+function player:getScore()
+  return self._score
 end
 
 function player:removeSquirt()
   --table.remove(self._squirts, 1)
   self._squirts = {}
+  --self._canSquirt = true
   --self._canSquirt = true
 end

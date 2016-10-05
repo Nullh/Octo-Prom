@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="8" tileheight="8" nextobjectid="20">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="8" tileheight="8" nextobjectid="25">
  <tileset firstgid="1" name="Blocks 8x8" tilewidth="8" tileheight="8" tilecount="4" columns="2">
-  <image source="../assets/Blocks 8x8.png" trans="000000" width="16" height="16"/>
+  <image source="../../GB-Game/assets/Blocks 8x8.png" trans="000000" width="16" height="16"/>
  </tileset>
  <layer name="bg" width="50" height="20">
   <data encoding="csv">
@@ -93,5 +93,13 @@
   <object id="10" x="155.748" y="66.3959" width="3.17853" height="3.17853"/>
   <object id="12" x="117.695" y="146.449" width="3.03615" height="2.76825"/>
   <object id="18" x="74.5" y="144.875" width="3.125" height="2.875"/>
+ </objectgroup>
+ <objectgroup name="pickups">
+  <object id="20" x="50.6667" y="122.333" width="3" height="3"/>
+  <object id="21" x="66.6667" y="106.333" width="2.66667" height="3.66667"/>
+  <object id="22" x="42.3333" y="90.6667" width="3.33333" height="3.33333"/>
+ </objectgroup>
+ <objectgroup name="levelend">
+  <object id="23" x="368.333" y="135.667" width="15" height="9.66667"/>
  </objectgroup>
 </map>

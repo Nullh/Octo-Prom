@@ -8,7 +8,7 @@ return {
   height = 20,
   tilewidth = 8,
   tileheight = 8,
-  nextobjectid = 20,
+  nextobjectid = 25,
   properties = {},
   tilesets = {
     {
@@ -18,7 +18,7 @@ return {
       tileheight = 8,
       spacing = 0,
       margin = 0,
-      image = "../assets/Blocks 8x8.png",
+      image = "../../GB-Game/assets/Blocks 8x8.png",
       imagewidth = 16,
       imageheight = 16,
       transparentcolor = "#000000",
@@ -354,6 +354,82 @@ return {
           y = 144.875,
           width = 3.125,
           height = 2.875,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "pickups",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 20,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 50.6667,
+          y = 122.333,
+          width = 3,
+          height = 3,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 21,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 66.6667,
+          y = 106.333,
+          width = 2.66667,
+          height = 3.66667,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 22,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 42.3333,
+          y = 90.6667,
+          width = 3.33333,
+          height = 3.33333,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "levelend",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 23,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 368.333,
+          y = 135.667,
+          width = 15,
+          height = 9.66667,
           rotation = 0,
           visible = true,
           properties = {}
