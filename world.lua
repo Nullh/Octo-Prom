@@ -18,13 +18,6 @@ function world:initialize(map, collider, gravity, pickups)
   self._rightBorder.type = 'bounds'
   self._botBorder = collider:rectangle(-10, self._height, self._width + 20, 10)
   self._botBorder.type = 'bounds'
-  --self._topBorder = collider:rectangle(-10, -10, self._width + 20, 10)
-  --self._topBorder.type = 'bounds'
-
-  --self._pickups = {}
-  --for i=1, table.getn(pickups) do
-  --  table.add(self._pickups, pickup:new(pickups[i].x, pickup[i].y, self._collider, i))
-  --end
 
   self._pickups = {}
   for i, pckp in ipairs(pickups) do

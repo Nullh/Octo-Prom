@@ -423,7 +423,7 @@ return {
       objects = {
         {
           id = 23,
-          name = "",
+          name = "level2",
           type = "",
           shape = "rectangle",
           x = 368.333,

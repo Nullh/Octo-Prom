@@ -6,7 +6,7 @@ require 'bubble'
 
 player = class('player')
 
-function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world)
+function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world, lives, score)
   self._animations = {}
   self._sprite = love.graphics.newImage('assets/Octo 16.png')
   self._ink = love.graphics.newImage('assets/ink.png')
@@ -27,9 +27,9 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world)
   self._facingRight = true
   self._moving = false
   self._canBark = true
-  self._lives = 3
+  self._lives = lives
   self._dead = false
-  self._score = 0
+  self._score = score
   self._isFlashFrame = false
   self._invulnTimerMax = 3
   self._invulnTimer = 0
@@ -69,7 +69,8 @@ function player:setY(y)
   self._collObj:moveTo(self._x, self._y)
 end
 
-function player:recreateCollObj()
+function player:recreateCollObj(world)
+  self._world = world
   self._collObj = self._world:getCollider():rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
   self._collObj:moveTo(self._x, self._y)
 end

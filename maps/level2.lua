@@ -8,7 +8,7 @@ return {
   height = 20,
   tilewidth = 8,
   tileheight = 8,
-  nextobjectid = 27,
+  nextobjectid = 28,
   properties = {},
   tilesets = {
     {
@@ -292,19 +292,6 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
-        },
-        {
-          id = 12,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 377.016,
-          y = 110.773,
-          width = 7.44963,
-          height = 5.50625,
-          rotation = 0,
-          visible = true,
-          properties = {}
         }
       }
     },
@@ -498,7 +485,21 @@ return {
       offsety = 0,
       draworder = "topdown",
       properties = {},
-      objects = {}
+      objects = {
+        {
+          id = 27,
+          name = "level3",
+          type = "",
+          shape = "rectangle",
+          x = 391.592,
+          y = 83.8894,
+          width = 9.71691,
+          height = 35.3048,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
     }
   }
 }
