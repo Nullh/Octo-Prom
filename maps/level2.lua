@@ -488,7 +488,7 @@ return {
       objects = {
         {
           id = 27,
-          name = "level3",
+          name = "map4",
           type = "",
           shape = "rectangle",
           x = 391.592,

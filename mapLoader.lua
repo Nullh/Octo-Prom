@@ -152,4 +152,5 @@ function mapLoader:getLevelEnd()
   local height = self._file.layers[matchLayer].objects[1].height
   self._levelEnd = self._collider:rectangle(x, y, width, height)
   self._levelEnd.type = 'levelend'
+  self._levelEnd.name = self._file.layers[matchLayer].objects[1].name
 end

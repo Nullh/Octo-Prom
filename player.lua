@@ -164,7 +164,7 @@ function player:update(dt, spaceReleased)
       self._score = 1 + self._score
       self._world:removePickup(shape.id)
     elseif shape.type == 'levelend' then
-      playState:loadLevel('level2')
+      playState:loadLevel(shape.name)
     else
       self._x = self._x + delta.x
       self._y = self._y + delta.y
