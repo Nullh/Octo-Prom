@@ -24,6 +24,9 @@ function menuState:update(dt)
   if love.keyboard.isScancodeDown('space') then
     state = 'game'
   end
+  if love.keyboard.isScancodeDown('escape') then
+    love.event.quit()
+  end
 end
 
 function menuState:draw()
