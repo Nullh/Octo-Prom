@@ -30,7 +30,7 @@ end
 function playState:init()
   gravity = 10
   collider = HC.new(300)
-  map = mapLoader:new('maps/level3.lua', 'assets/Blocks 8x8.png', collider)
+  map = mapLoader:new('maps/'..nextLevel..'.lua', 'assets/Blocks 8x8.png', collider)
   levelEnd = map:getLevelEnd()
 
   blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
@@ -38,7 +38,7 @@ function playState:init()
   allPickups = map:getObjectsFromLayer('pickups')
   --bad1 = baddie:new(60, 60, 10, collider, gravity)
   myWorld = world:new(map, collider, gravity, allPickups)
-  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, myWorld, 3, 0)
+  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, myWorld, lives, score)
 
   myCamera = camera:new(map:getWidth(), map:getHeight(), 0, 4)
   myCamera:newLayer(-9, 0, function()
@@ -65,24 +65,26 @@ function playState:init()
       end
     end
   end)
+  collectgarbage()
 end
 
 function playState:loadLevel(name)
-  spaceReleased = true
-  collider = HC.resetHash(300)
-  map = mapLoader:new('maps/'..name..'.lua', 'assets/Blocks 8x8.png', collider)
-  myCamera:updateMapWidth(map:getWidth())
-  allPickups = map:getObjectsFromLayer('pickups')
-  myWorld = world:new(map, collider, gravity, allPickups)
-  levelEnd = map:getLevelEnd()
+  --spaceReleased = true
+  --collider = HC.resetHash(300)
+  --map = mapLoader:new('maps/'..name..'.lua', 'assets/Blocks 8x8.png', collider)
+  --myCamera:updateMapWidth(map:getWidth())
+  --allPickups = map:getObjectsFromLayer('pickups')
+  --myWorld = world:new(map, collider, gravity, allPickups)
+  --levelEnd = map:getLevelEnd()
   --myPlayer:recreateCollObj(myWorld)
   --myPlayer:setCoords(10, 140)
-  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, myWorld, myPlayer:getLives(), myPlayer:getScore())
-  blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
-  allBaddies = baddiebuilder:new(map:getObjectsFromLayer('enemies'), collider, gravity)
+  --myPlayer = player:new(10, 140, 50, 60, 3, 0.5, myWorld, myPlayer:getLives(), myPlayer:getScore())
+  --blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
+  --allBaddies = baddiebuilder:new(map:getObjectsFromLayer('enemies'), collider, gravity)
   --clear up orphaned objects
-  collectgarbage()
-
+  --collectgarbage()
+  state = 'levelEnd'
+  nextLevel = name
 
 end
 

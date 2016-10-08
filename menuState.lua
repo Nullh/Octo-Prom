@@ -2,14 +2,6 @@ local class = require 'middleclass'
 
 menuState = class('menuState')
 
-local HC = require 'HC'
-require 'mapLoader'
-require 'player'
-require 'camera'
-require 'world'
-require 'TEsound'
-require 'baddie'
-require 'baddiebuilder'
 
 function menuState:initialize()
 
