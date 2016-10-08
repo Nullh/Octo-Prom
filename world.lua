@@ -17,7 +17,7 @@ function world:initialize(map, collider, gravity, pickups)
   self._rightBorder = collider:rectangle(self._width, -10, 10, self._height + 20)
   self._rightBorder.type = 'bounds'
   self._botBorder = collider:rectangle(-10, self._height, self._width + 20, 10)
-  self._botBorder.type = 'bounds'
+  self._botBorder.type = 'bottombounds'
 
   self._pickups = {}
   for i, pckp in ipairs(pickups) do
@@ -49,7 +49,7 @@ function world:reload(collider, pickups)
   self._rightBorder = self._collider:rectangle(self._width, -10, 10, self._height + 20)
   self._rightBorder.type = 'bounds'
   self._botBorder = self._collider:rectangle(-10, self._height, self._width + 20, 10)
-  self._botBorder.type = 'bounds'
+  self._botBorder.type = 'bottombounds'
 end
 
 function world:mute()

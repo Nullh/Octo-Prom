@@ -15,6 +15,8 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world,
   self._spriteHeight = 16
   self._x = x
   self._y = y
+  self._initialX = x
+  self._initialY = y
   self._speed = speed
   self._jumpSpeed = jumpSpeed
   self._jumpHeight = -jumpHeight
@@ -165,6 +167,9 @@ function player:update(dt, spaceReleased)
       self._world:removePickup(shape.id)
     elseif shape.type == 'levelend' then
       playState:loadLevel(shape.name)
+    elseif shape.type == 'bottombounds' then
+      self:getHit()
+      self:setCoords(self._initialX, self._initialY)
     else
       self._x = self._x + delta.x
       self._y = self._y + delta.y
@@ -186,7 +191,6 @@ function player:update(dt, spaceReleased)
        and self._invulnTimer <= 0
        and self._y + (self._spriteHeight/2) > uy then
         self:getHit()
-        self._invulnTimer = self._invulnTimerMax
       elseif shape.type == 'enemy'
        and self._y + (self._spriteHeight/2) <= uy then
          allBaddies:kill(shape.id)
@@ -304,6 +308,7 @@ function player:getHit()
     self:newSquirt(self._x, self._y)
     self._canSquirt = false
   end
+  self._invulnTimer = self._invulnTimerMax
   if self._facingRight then
   --  self._x = self._x - 5
   --  self._y = self._y - 5
