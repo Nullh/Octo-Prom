@@ -8,7 +8,7 @@
 require 'playState'
 require 'menuState'
 
-debug = true
+debug = false
 local blockingObj = {}
 local spaceReleased = true
 

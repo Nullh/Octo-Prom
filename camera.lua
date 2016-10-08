@@ -21,13 +21,18 @@ function camera:drawHud(height)
   love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), height)
 end
 
+function camera:updateMapWidth(width)
+  self._mapWidth = width
+end
+
 function camera:centerOn(x, y)
   if self._width  < self._mapWidth*self._scale then
     self._transformationX = math.floor((-x * self._scale) + (self._width /2))/self._scale
+
     if self._transformationX > 0 then
       self._transformationX = 0
-    elseif self._transformationX < ((self._mapWidth)  - (self._width)) then
-      self._transformationX = (self._mapWidth - self._width)
+    elseif self._transformationX < -((self._mapWidth)  - (self._width/4)) then
+      self._transformationX = -(self._mapWidth - (self._width/4))
     end
   else
     self._transformationX = ((self._width / self._scale) - self._mapWidth)/2
@@ -44,16 +49,6 @@ function camera:centerOn(x, y)
     self._transformationY = ((self._height / self._scale) - self._mapHeight)/2
   end
 
-  --if self._height  < self._mapHeight*self._scale  then
-  --  self._transformationY = math.floor(-y/self._scale + ((self._height/self._scale) /2))
-  --  if self._transformationY > 0 then
-  --    self._transformationY = 0
-  --  elseif self._transformationY < -((self._mapHeight/self._scale)  - (self._height/self._scale)) then
-  --    self._transformationY = -((self._mapHeight/self._scale)  - (self._height/self._scale))
-  --  end
-  --else
-  --  self._transformationY = ((self._height/self._scale)  - (self._mapHeight/self._scale))/2
-  --end
 end
 
 function camera:newLayer(order, scale, func)
@@ -97,6 +92,12 @@ function camera:draw()
   love.graphics.setColor(88, 94, 32)
   love.graphics.draw(self._scoreSprite, 0, 0, 0, self._scale, self._scale)
   love.graphics.print(myPlayer:getScore(), (16 * self._scale), self._scale, 0, self._scale/2, self._scale/2)
+  if debug then
+    love.graphics.print('TransX: '..self._transformationX, 60, 10)
+    love.graphics.print('TransY: '..self._transformationY, 60, 20)
+    love.graphics.print('MapWidth: '..self._mapWidth, 60, 30)
+    love.graphics.print('Width: '..self._width, 60, 40)
+  end
 end
 
 function camera:getScale()

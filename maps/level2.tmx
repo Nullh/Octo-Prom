@@ -105,6 +105,6 @@
   <object id="26" x="262.033" y="132.798" width="3.23897" height="3.88677"/>
  </objectgroup>
  <objectgroup name="levelend">
-  <object id="27" name="map4" x="391.592" y="83.8894" width="9.71691" height="35.3048"/>
+  <object id="27" name="level3" x="391.592" y="83.8894" width="9.71691" height="35.3048"/>
  </objectgroup>
 </map>

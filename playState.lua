@@ -30,7 +30,7 @@ end
 function playState:init()
   gravity = 10
   collider = HC.new(300)
-  map = mapLoader:new('maps/map4.lua', 'assets/Blocks 8x8.png', collider)
+  map = mapLoader:new('maps/level3.lua', 'assets/Blocks 8x8.png', collider)
   levelEnd = map:getLevelEnd()
 
   blockingObj = map:createBlockingObjFromLayer(collider, 'blocking')
@@ -71,6 +71,7 @@ function playState:loadLevel(name)
   spaceReleased = true
   collider = HC.resetHash(300)
   map = mapLoader:new('maps/'..name..'.lua', 'assets/Blocks 8x8.png', collider)
+  myCamera:updateMapWidth(map:getWidth())
   allPickups = map:getObjectsFromLayer('pickups')
   myWorld = world:new(map, collider, gravity, allPickups)
   levelEnd = map:getLevelEnd()
@@ -121,11 +122,11 @@ function playState:draw()
     end
     if debug == true then
       --love.graphics.print(allBaddies:getBadInfo(), 10, 20)
-      love.graphics.print(table.getn(allPickups), 10, 10)
-      love.graphics.print(myWorld:getPickupInfo(), 10, 20)
+      --love.graphics.print(table.getn(allPickups), 10, 10)
+      --love.graphics.print(myWorld:getPickupInfo(), 10, 20)
       --love.graphics.print(myPlayer._invulnTimer, 10, 20)
-      for i, v in ipairs(collider) do
-        v:draw('fill')
-      end
+      --for i, v in ipairs(collider) do
+      --  v:draw('fill')
+      --end
     end
 end
