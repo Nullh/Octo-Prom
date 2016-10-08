@@ -45,7 +45,7 @@ function baddie:update(dt, fallLimit)
   self._y = self._y + self._yVelocity
   self._collObj:moveTo(self._x, self._y)
   for shape, delta in pairs(collider:collisions(self._collObj)) do
-    if shape.type ~= 'bounds' then
+    if shape.type ~= 'bounds' and shape.type ~= 'bottombounds' then
       self._x = self._x + delta.x
       self._y = self._y + delta.y
       if delta.y < 0 then
