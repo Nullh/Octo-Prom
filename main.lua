@@ -9,7 +9,7 @@ require 'playState'
 require 'menuState'
 require 'endState'
 
-debug = true
+debug = false
 local blockingObj = {}
 local spaceReleased = true
 
@@ -18,8 +18,8 @@ local spaceReleased = true
 function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest',0)
   state = 'menu'
-  currentLevel = 'level1'
-  nextLevel = 'level1'
+  currentLevel = 'l1'
+  nextLevel = 'l1'
   score = 0
   lives = 3
 

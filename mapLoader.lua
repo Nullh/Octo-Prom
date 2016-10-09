@@ -110,11 +110,13 @@ function mapLoader:createBlockingObjFromLayer(collider, layerString)
       table.insert(tileTable, collider:rectangle(self._file.layers[matchLayer].objects[i].x, self._file.layers[matchLayer].objects[i].y,
           self._file.layers[matchLayer].objects[i].width, self._file.layers[matchLayer].objects[i].height))
       tileTable[table.getn(tileTable)].name = layerString
+      tileTable[table.getn(tileTable)].type = layerString
     elseif self._file.layers[matchLayer].objects[i].shape == "ellipse" then
       table.insert(tileTable, collider:circle(self._file.layers[matchLayer].objects[i].x + (self._file.layers[matchLayer].objects[i].width/2),
           self._file.layers[matchLayer].objects[i].y + (self._file.layers[matchLayer].objects[i].width/2),
           self._file.layers[matchLayer].objects[i].width/2))
       tileTable[table.getn(tileTable)].name = layerString
+      tileTable[table.getn(tileTable)].type = layerString
     end
   end
   return tileTable

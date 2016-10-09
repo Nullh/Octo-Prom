@@ -38,7 +38,7 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world)
   self._bubbleTimer = 1
   self._bubbles = {}
   self._world = world
-  self._collObj = world:getCollider():rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
+  self._collObj = world:getCollider():rectangle(self._x, self._y, self._spriteWidth-2, self._spriteHeight)
   self._collObj.type = 'player'
   self._grid = anim8.newGrid(self._spriteWidth, self._spriteHeight, self._sprite:getWidth(), self._sprite:getHeight())
   self._animations['walkLeft'] = anim8.newAnimation(self._grid('1-3',1, 1,2), 0.2):flipH()
@@ -124,7 +124,7 @@ end
 function player:jump()
   if self._canBark and self._canJump then
     self._canBark = false
-    TEsound.play(self._jumpSound, 'jump', 1, 1, self:flipCanBark())
+    --TEsound.play(self._jumpSound, 'jump', 1, 1, self:flipCanBark())
   end
   self._jumping = true
 end
@@ -169,7 +169,7 @@ function player:update(dt, spaceReleased)
     elseif shape.type == 'bottombounds' then
       self:getHit()
       self:setCoords(self._initialX, self._initialY)
-    else
+    elseif shape.type ~= 'enemyblocking' then
       self._x = self._x + delta.x
       self._y = self._y + delta.y
       if delta.y < 0 then
