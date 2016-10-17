@@ -5,9 +5,9 @@ require 'TEsound'
 baddie = class('baddie')
 
 function baddie:initialize(x, y, speed, collider, g, id, builder)
-  self._sprite = love.graphics.newImage('assets/Baddie.png')
-  self._spriteWidth = 8
-  self._spriteHeight = 8
+  self._sprite = love.graphics.newImage('assets/Bad Squid.png')
+  self._spriteWidth = 16
+  self._spriteHeight = 16
   self._x = x
   self._y = y
   self._id = id
@@ -23,8 +23,8 @@ function baddie:initialize(x, y, speed, collider, g, id, builder)
   self._collObj.id = self._id
   self._grid = anim8.newGrid(self._spriteWidth, self._spriteHeight, self._sprite:getWidth(), self._sprite:getHeight())
   self._animations = {}
-  self._animations['walkLeft'] = anim8.newAnimation(self._grid(1, 1), 0.2)
-  self._animations['walkRight'] = anim8.newAnimation(self._grid(1, 1), 0.2):flipH()
+  self._animations['walkLeft'] = anim8.newAnimation(self._grid('1-2',1, '1-2',2), 0.2):flipH()
+  self._animations['walkRight'] = anim8.newAnimation(self._grid('1-2',1, '1-2',2), 0.2)
   self._animations['idleLeft'] = anim8.newAnimation(self._grid(1, 1), 0.2)
   self._animations['idleRight'] = anim8.newAnimation(self._grid(1, 1), 0.2):flipH()
   --self._jumpSound = love.sound.newSoundData('assets/bark.mp3')
