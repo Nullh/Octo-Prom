@@ -6,7 +6,7 @@ require 'bubble'
 
 player = class('player')
 
-function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world, lives, score)
+function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world)
   self._animations = {}
   self._sprite = love.graphics.newImage('assets/Octo 16.png')
   self._ink = love.graphics.newImage('assets/ink.png')
@@ -29,9 +29,7 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world,
   self._facingRight = true
   self._moving = false
   self._canBark = true
-  self._lives = lives
   self._dead = false
-  self._score = score
   self._isFlashFrame = false
   self._invulnTimerMax = 3
   self._invulnTimer = 0
@@ -40,7 +38,7 @@ function player:initialize(x, y, speed, jumpSpeed, jumpHeight, jumpTimer, world,
   self._bubbleTimer = 1
   self._bubbles = {}
   self._world = world
-  self._collObj = world:getCollider():rectangle(self._x, self._y, self._spriteWidth, self._spriteHeight)
+  self._collObj = world:getCollider():rectangle(self._x, self._y, self._spriteWidth-2, self._spriteHeight)
   self._collObj.type = 'player'
   self._grid = anim8.newGrid(self._spriteWidth, self._spriteHeight, self._sprite:getWidth(), self._sprite:getHeight())
   self._animations['walkLeft'] = anim8.newAnimation(self._grid('1-3',1, 1,2), 0.2):flipH()
@@ -126,7 +124,7 @@ end
 function player:jump()
   if self._canBark and self._canJump then
     self._canBark = false
-    TEsound.play(self._jumpSound, 'jump', 1, 1, self:flipCanBark())
+    --TEsound.play(self._jumpSound, 'jump', 1, 1, self:flipCanBark())
   end
   self._jumping = true
 end
@@ -136,7 +134,8 @@ function player:update(dt, spaceReleased)
   if self._jumping then
 
     if self._jumpTimer > 0 and self._canJump == true then
-      self._yVelocity = self._yVelocity - self._jumpSpeed * (dt / (self._jumpTimerMax*5))
+      --self._yVelocity = self._yVelocity - self._jumpSpeed * (dt / (self._jumpTimerMax*5))
+      self._yVelocity = self._yVelocity - ((self._jumpSpeed * dt) / (self._jumpTimerMax*5))
       if spaceReleased == true then
         self._jumpTimer = -1
       end
@@ -163,14 +162,14 @@ function player:update(dt, spaceReleased)
   self._collObj:moveTo(self._x, self._y)
   for shape, delta in pairs(collider:collisions(self._collObj)) do
     if shape.type == 'pickup' then
-      self._score = 1 + self._score
+      score = 1 + score
       self._world:removePickup(shape.id)
     elseif shape.type == 'levelend' then
       playState:loadLevel(shape.name)
     elseif shape.type == 'bottombounds' then
       self:getHit()
       self:setCoords(self._initialX, self._initialY)
-    else
+    elseif shape.type ~= 'enemyblocking' then
       self._x = self._x + delta.x
       self._y = self._y + delta.y
       if delta.y < 0 then
@@ -194,7 +193,7 @@ function player:update(dt, spaceReleased)
       elseif shape.type == 'enemy'
        and self._y + (self._spriteHeight/2) <= uy then
          allBaddies:kill(shape.id)
-         self._score = self._score + 1
+         score = score + 1
          self._yVelocity = -2.5
          self._canJump = false
       end
@@ -229,9 +228,9 @@ function player:update(dt, spaceReleased)
     end
   end
 
-  if self._score >= 20 then
-    self._score = self._score - 20
-    self._lives = self._lives + 1
+  if score >= 20 then
+    score = score - 20
+    lives = lives + 1
   end
 
   if self._invulnTimer > 0 then
@@ -299,11 +298,11 @@ function player:draw()
 end
 
 function player:getLives()
-  return self._lives
+  return lives
 end
 
 function player:getHit()
-  self._lives = self._lives - 1
+  lives = lives - 1
   if self._canSquirt then
     self:newSquirt(self._x, self._y)
     self._canSquirt = false
@@ -316,7 +315,7 @@ function player:getHit()
   --  self._x = self._x + 5
   --  self._y = self._y - 5
   end
-  if self._lives <= 0 then
+  if lives <= 0 then
     self._dead = true
   end
 end
@@ -330,7 +329,7 @@ function player:newSquirt()
 end
 
 function player:getScore()
-  return self._score
+  return score
 end
 
 function player:removeSquirt()

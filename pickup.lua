@@ -10,11 +10,11 @@ function pickup:initialize(x, y, collider, id)
   self._visible = true
   local rand = love.math.random(1,3)
   if rand == 1 then
-    self._sprite = love.graphics.newImage('assets/Baddie.png')
+    self._sprite = love.graphics.newImage('assets/Squiddy.png')
   elseif rand == 2 then
-    self._sprite = love.graphics.newImage('assets/Baddie.png')
+    self._sprite = love.graphics.newImage('assets/Fishy.png')
   elseif rand == 3 then
-    self._sprite = love.graphics.newImage('assets/Baddie.png')
+    self._sprite = love.graphics.newImage('assets/Crabby.png')
   end
   self._collObj = collider:rectangle(self._x, self._y, self._sprite:getWidth(), self._sprite:getHeight())
   self._collObj.type = 'pickup'
