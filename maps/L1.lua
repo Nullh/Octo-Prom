@@ -800,7 +800,7 @@ return {
       objects = {
         {
           id = 8,
-          name = "finale",
+          name = "l2",
           type = "",
           shape = "rectangle",
           x = 784.009,

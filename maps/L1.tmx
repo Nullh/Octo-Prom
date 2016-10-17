@@ -214,7 +214,7 @@
   <object id="44" x="735.875" y="120" width="7.875" height="7.875"/>
  </objectgroup>
  <objectgroup name="levelend">
-  <object id="8" name="finale" x="784.009" y="71.997" width="7.85591" height="7.87387"/>
+  <object id="8" name="l2" x="784.009" y="71.997" width="7.85591" height="7.87387"/>
  </objectgroup>
  <objectgroup name="enemyblocking">
   <object id="9" x="199.715" y="143.564" width="8.80202" height="8.80202"/>
