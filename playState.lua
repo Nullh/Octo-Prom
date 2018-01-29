@@ -41,7 +41,7 @@ function playState:init()
   allPickups = map:getObjectsFromLayer('pickups')
   --bad1 = baddie:new(60, 60, 10, collider, gravity)
   myWorld = world:new(map, collider, gravity, allPickups)
-  myPlayer = player:new(10, 140, 50, 60, 3, 0.5, myWorld, lives, score)
+  myPlayer = player:new(10, 140, 50, 60, 4, 0.5, myWorld, lives, score)
 
   myCamera = camera:new(map:getWidth(), map:getHeight(), 0, 4)
   myCamera:newLayer(-9, 0, function()
